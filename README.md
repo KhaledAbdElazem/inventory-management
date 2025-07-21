@@ -1,6 +1,15 @@
 # Islam Inventory Management System
 
+[![Vercel](https://img.shields.io/badge/Deployed%20on-Vercel-000000?style=for-the-badge&logo=vercel&logoColor=white)](https://islam-918xg2wjm-khaledabdelazems-projects.vercel.app)
+[![Next.js](https://img.shields.io/badge/Next.js-15.4.1-000000?style=for-the-badge&logo=next.js&logoColor=white)](https://nextjs.org)
+[![MongoDB](https://img.shields.io/badge/MongoDB-Atlas-47A248?style=for-the-badge&logo=mongodb&logoColor=white)](https://www.mongodb.com)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind%20CSS-4.0-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white)](https://tailwindcss.com)
+
 A full-stack inventory management system built with Next.js, featuring both frontend and backend functionality in a single application. This system manages inventory items, clients, purchase orders, and sales with comprehensive barcode support and real-time tracking.
+
+## 🌐 Live Demo
+
+**Production URL:** [https://islam-918xg2wjm-khaledabdelazems-projects.vercel.app](https://islam-918xg2wjm-khaledabdelazems-projects.vercel.app)
 
 ## Features
 
