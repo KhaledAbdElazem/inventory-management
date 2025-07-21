@@ -1,0 +1,142 @@
+[
+  {
+    "_id": {
+      "$oid": "687b29a528391306040828ec"
+    },
+    "name": "test",
+    "image": "",
+    "quantity": 10,
+    "price": 20,
+    "barcode": "123456789",
+    "createdAt": {
+      "$date": "2025-07-19T05:14:14.000Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "687b29a528391306040828ed"
+    },
+    "name": "item1",
+    "image": "",
+    "quantity": 15,
+    "price": 30,
+    "barcode": "234567890",
+    "createdAt": {
+      "$date": "2024-06-10T12:00:00.000Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "687b29a528391306040828ee"
+    },
+    "name": "item2",
+    "image": "",
+    "quantity": 5,
+    "price": 50,
+    "barcode": "345678901",
+    "createdAt": {
+      "$date": "2024-01-05T08:30:00.000Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "687b29a528391306040828ef"
+    },
+    "name": "item3",
+    "image": "",
+    "quantity": 20,
+    "price": 10,
+    "barcode": "456789012",
+    "createdAt": {
+      "$date": "2024-03-15T15:45:00.000Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "687b29a528391306040828f0"
+    },
+    "name": "item4",
+    "image": "",
+    "quantity": 8,
+    "price": 40,
+    "barcode": "567890123",
+    "createdAt": {
+      "$date": "2023-12-20T10:10:00.000Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "687b29a528391306040828f1"
+    },
+    "name": "item5",
+    "image": "",
+    "quantity": 12,
+    "price": 25,
+    "barcode": "678901234",
+    "createdAt": {
+      "$date": "2024-07-01T14:20:00.000Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "687b29a528391306040828f2"
+    },
+    "name": "item6",
+    "image": "",
+    "quantity": 7,
+    "price": 60,
+    "barcode": "789012345",
+    "createdAt": {
+      "$date": "2024-05-05T09:00:00.000Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "687b29a528391306040828f3"
+    },
+    "name": "item7",
+    "image": "",
+    "quantity": 30,
+    "price": 8,
+    "barcode": "890123456",
+    "createdAt": {
+      "$date": "2023-11-11T16:30:00.000Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "687b29a528391306040828f4"
+    },
+    "name": "item8",
+    "image": "",
+    "quantity": 3,
+    "price": 100,
+    "barcode": "901234567",
+    "createdAt": {
+      "$date": "2023-09-18T07:45:00.000Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "687b29a528391306040828f5"
+    },
+    "name": "item9",
+    "image": "",
+    "quantity": 25,
+    "price": 15,
+    "barcode": "012345678",
+    "createdAt": {
+      "$date": "2024-02-22T11:15:00.000Z"
+    },
+    "__v": 0
+  }
+]
