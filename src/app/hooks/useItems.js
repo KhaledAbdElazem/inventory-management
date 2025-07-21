@@ -1,7 +1,6 @@
 import { useState } from 'react';
 
-const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
-const ITEMS_URL = `${BASE_URL}/items`;
+const ITEMS_URL = '/api/items';
 
 export const useItems = () => {
   const [items, setItems] = useState([]);
