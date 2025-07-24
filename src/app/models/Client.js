@@ -40,12 +40,13 @@ const clientSchema = new mongoose.Schema({
     type: String,
     trim: true,
   },
+  userId: { type: String, required: true }, // User who owns this client
 }, {
   timestamps: true,
 });
 
 // Create indexes
-clientSchema.index({ name: 1 });
-clientSchema.index({ email: 1 });
+clientSchema.index({ name: 1, userId: 1 });
+clientSchema.index({ email: 1, userId: 1 });
 
 export default mongoose.models.Client || mongoose.model('Client', clientSchema);

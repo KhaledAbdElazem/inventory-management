@@ -1,19 +1,25 @@
 import { connectToDatabase } from '../../lib/mongodb';
 import Item from '../../models/Item';
+import { getAuthenticatedUser } from '../../lib/auth';
 
 export async function GET() {
   try {
+    const user = await getAuthenticatedUser();
     await connectToDatabase();
-    const items = await Item.find().sort({ createdAt: -1 });
+    const items = await Item.find({ userId: user.id }).sort({ createdAt: -1 });
     return Response.json(items);
   } catch (error) {
     console.error('[API] Error fetching items:', error);
+    if (error.message === 'Unauthorized') {
+      return Response.json({ message: 'Unauthorized' }, { status: 401 });
+    }
     return Response.json({ message: 'Error fetching items' }, { status: 500 });
   }
 }
 
 export async function POST(req) {
   try {
+    const user = await getAuthenticatedUser();
     await connectToDatabase();
     const data = await req.json();
 
@@ -33,6 +39,7 @@ export async function POST(req) {
       image: data.image,
       quantity: data.quantity,
       price: data.price,
+      userId: user.id, // Add user ownership
       // This status logic is fine
       status: data.quantity === 0
         ? 'out_of_stock'
@@ -68,6 +75,7 @@ export async function POST(req) {
 
 export async function PUT(req) {
     try {
+        const user = await getAuthenticatedUser();
         await connectToDatabase();
         const data = await req.json();
         const { _id, ...updateData } = data; // Separate id from the rest of the data
@@ -76,7 +84,12 @@ export async function PUT(req) {
             return Response.json({ message: 'Item ID is required for update' }, { status: 400 });
         }
 
-        const updatedItem = await Item.findByIdAndUpdate(_id, updateData, { new: true, runValidators: true });
+        // Only allow updating items owned by the current user
+        const updatedItem = await Item.findOneAndUpdate(
+            { _id, userId: user.id }, 
+            updateData, 
+            { new: true, runValidators: true }
+        );
         
         if (!updatedItem) {
             return Response.json({ message: 'Item not found' }, { status: 404 });
@@ -85,6 +98,9 @@ export async function PUT(req) {
         return Response.json(updatedItem);
     } catch (error) {
         console.error('[API] Error updating item:', error);
+        if (error.message === 'Unauthorized') {
+            return Response.json({ message: 'Unauthorized' }, { status: 401 });
+        }
         if (error.code === 11000) {
             return Response.json({ message: `An item with this barcode already exists.` }, { status: 409 });
         }
@@ -94,6 +110,7 @@ export async function PUT(req) {
 
 export async function DELETE(req) {
     try {
+        const user = await getAuthenticatedUser();
         await connectToDatabase();
         const { _id } = await req.json(); // Get ID from body
 
@@ -101,7 +118,8 @@ export async function DELETE(req) {
             return Response.json({ message: 'Item ID is required for deletion' }, { status: 400 });
         }
 
-        const deletedItem = await Item.findByIdAndDelete(_id);
+        // Only allow deleting items owned by the current user
+        const deletedItem = await Item.findOneAndDelete({ _id, userId: user.id });
 
         if (!deletedItem) {
             return Response.json({ message: 'Item not found' }, { status: 404 });
@@ -110,6 +128,9 @@ export async function DELETE(req) {
         return Response.json({ message: 'Item deleted successfully' });
     } catch (error) {
         console.error('[API] Error deleting item:', error);
+        if (error.message === 'Unauthorized') {
+            return Response.json({ message: 'Unauthorized' }, { status: 401 });
+        }
         return Response.json({ message: 'Error deleting item' }, { status: 500 });
     }
 }

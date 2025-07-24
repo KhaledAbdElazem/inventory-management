@@ -106,15 +106,17 @@ const purchaseOrderSchema = new mongoose.Schema({
     type: Boolean,
     default: false,
   },
+  userId: { type: String, required: true }, // User who owns this purchase order
 }, {
   timestamps: true,
 });
 
 // Create indexes
-purchaseOrderSchema.index({ orderNumber: 1 }, { unique: true });
+purchaseOrderSchema.index({ orderNumber: 1, userId: 1 }, { unique: true });
 purchaseOrderSchema.index({ dealerName: 1 });
 purchaseOrderSchema.index({ status: 1 });
 purchaseOrderSchema.index({ createdAt: -1 });
+purchaseOrderSchema.index({ userId: 1 });
 
 // Generate order number before saving
 purchaseOrderSchema.pre('save', async function(next) {

@@ -71,14 +71,16 @@ const saleSchema = new mongoose.Schema({
     type: String,
     trim: true,
   },
+  userId: { type: String, required: true }, // User who owns this sale
 }, {
   timestamps: true,
 });
 
 // Create indexes
-saleSchema.index({ saleNumber: 1 }, { unique: true });
+saleSchema.index({ saleNumber: 1, userId: 1 }, { unique: true });
 saleSchema.index({ client: 1 });
 saleSchema.index({ createdAt: -1 });
+saleSchema.index({ userId: 1 });
 
 // Generate sale number before saving
 saleSchema.pre('save', async function(next) {
