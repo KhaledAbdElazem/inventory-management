@@ -101,8 +101,8 @@ A comprehensive **multi-user** inventory management system built with Next.js, f
 
 1. **Clone the repository:**
    ```bash
-   git clone https://github.com/your-username/islam-inventory-management.git
-   cd islam-inventory-management
+   git clone https://github.com/your-username/inventory-management.git
+   cd inventory-management
    ```
 
 2. **Install dependencies:**
