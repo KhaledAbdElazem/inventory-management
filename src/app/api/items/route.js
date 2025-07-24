@@ -4,15 +4,20 @@ import { getAuthenticatedUser } from '../../lib/auth';
 
 export async function GET() {
   try {
-    const user = await getAuthenticatedUser();
     await connectToDatabase();
-    const items = await Item.find({ userId: user.id }).sort({ createdAt: -1 });
-    return Response.json(items);
+    
+    // Try to get authenticated user, but handle gracefully if not authenticated
+    try {
+      const user = await getAuthenticatedUser();
+      // If user is authenticated, return their items
+      const items = await Item.find({ userId: user.id }).sort({ createdAt: -1 });
+      return Response.json(items);
+    } catch (authError) {
+      // If not authenticated, return empty array (user will be redirected by middleware)
+      return Response.json([]);
+    }
   } catch (error) {
     console.error('[API] Error fetching items:', error);
-    if (error.message === 'Unauthorized') {
-      return Response.json({ message: 'Unauthorized' }, { status: 401 });
-    }
     return Response.json({ message: 'Error fetching items' }, { status: 500 });
   }
 }

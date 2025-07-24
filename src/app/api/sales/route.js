@@ -2,15 +2,25 @@ import { connectToDatabase } from '../../lib/mongodb';
 import Sale from '../../models/Sale';
 import Item from '../../models/Item';
 import Client from '../../models/Client';
+import { getAuthenticatedUser } from '../../lib/auth';
 
 export async function GET() {
   try {
     await connectToDatabase();
-    const sales = await Sale.find()
-      .populate('client', 'name email phone')
-      .populate('items.item', 'name barcode')
-      .sort({ createdAt: -1 });
-    return Response.json(sales);
+    
+    // Try to get authenticated user, but handle gracefully if not authenticated
+    try {
+      const user = await getAuthenticatedUser();
+      // If user is authenticated, return their sales
+      const sales = await Sale.find({ userId: user.id })
+        .populate('client', 'name email phone')
+        .populate('items.item', 'name barcode')
+        .sort({ createdAt: -1 });
+      return Response.json(sales);
+    } catch (authError) {
+      // If not authenticated, return empty array (user will be redirected by middleware)
+      return Response.json([]);
+    }
   } catch (error) {
     console.error('[API] Error fetching sales:', error);
     return Response.json({ message: 'Error fetching sales' }, { status: 500 });
@@ -19,6 +29,7 @@ export async function GET() {
 
 export async function POST(req) {
   try {
+    const user = await getAuthenticatedUser();
     await connectToDatabase();
     const data = await req.json();
 
@@ -77,6 +88,7 @@ export async function POST(req) {
       paymentMethod: data.paymentMethod || 'cash',
       status: 'completed',
       notes: data.notes,
+      userId: user.id,
     });
 
     // Update item quantities and client stats

@@ -1,5 +1,6 @@
 'use client';
 import { useState, useEffect } from 'react';
+import { useSession } from 'next-auth/react';
 import { useItems } from './hooks/useItems';
 import { useRouter } from 'next/navigation';
 import { useSales } from './hooks/useSales';
@@ -199,16 +200,24 @@ const TopItemsChart = ({ items }) => {
 };
 
 const DashboardHome = () => {
+  const { data: session, status } = useSession();
   const { items, loading: itemsLoading, error, fetchItems } = useItems();
   const { sales, fetchSales } = useSales();
   const { clients, fetchClients } = useClients();
   const router = useRouter();
 
-  useEffect(() => {
+useEffect(() => {
+    if (status === 'loading') return; // Still loading
+    
+    if (!session) {
+      router.push('/auth/signin');
+      return;
+    }
+    
     fetchItems();
     fetchSales();
     fetchClients();
-  }, []);
+  }, [session, status, router]);
 
   // Calculate statistics
   const totalItems = items.length;
@@ -223,6 +232,20 @@ const DashboardHome = () => {
   
   // Client statistics
   const totalClients = clients.length;
+
+  // Show loading screen while authentication is loading
+  if (status === 'loading') {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-50 via-white to-purple-50">
+        <div className="text-xl text-gray-600">Loading...</div>
+      </div>
+    );
+  }
+
+  // If not authenticated, don't render anything (will redirect)
+  if (!session) {
+    return null;
+  }
 
   if (itemsLoading) {
     return (
