@@ -4,7 +4,7 @@ import Item from '../../../models/Item';
 export async function GET(req, { params }) {
   try {
     await connectToDatabase();
-    const { id } = params;
+    const { id } = (await params);
 
     const item = await Item.findById(id);
     
@@ -22,7 +22,7 @@ export async function GET(req, { params }) {
 export async function PUT(req, { params }) {
   try {
     await connectToDatabase();
-    const { id } = params;
+    const { id } = (await params);
     const updateData = await req.json();
 
     const updatedItem = await Item.findByIdAndUpdate(
@@ -51,7 +51,7 @@ export async function PUT(req, { params }) {
 export async function DELETE(req, { params }) {
   try {
     await connectToDatabase();
-    const { id } = params;
+    const { id } = (await params);
 
     const deletedItem = await Item.findByIdAndDelete(id);
 

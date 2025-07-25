@@ -1,14 +1,24 @@
 import { connectToDatabase } from '../../lib/mongodb';
 import PurchaseOrder from '../../models/PurchaseOrder';
 import Item from '../../models/Item';
+import { getAuthenticatedUser } from '../../lib/auth';
 
 export async function GET() {
   try {
     await connectToDatabase();
-    const orders = await PurchaseOrder.find()
-      .populate('items.existingItem', 'name barcode')
-      .sort({ createdAt: -1 });
-    return Response.json(orders);
+    
+    // Try to get authenticated user, but handle gracefully if not authenticated
+    try {
+      const user = await getAuthenticatedUser();
+      // If user is authenticated, return their purchase orders
+      const orders = await PurchaseOrder.find({ userId: user.id })
+        .populate('items.existingItem', 'name barcode')
+        .sort({ createdAt: -1 });
+      return Response.json(orders);
+    } catch (authError) {
+      // If not authenticated, return empty array (user will be redirected by middleware)
+      return Response.json([]);
+    }
   } catch (error) {
     console.error('[API] Error fetching purchase orders:', error);
     return Response.json({ message: 'Error fetching purchase orders' }, { status: 500 });
@@ -17,6 +27,7 @@ export async function GET() {
 
 export async function POST(req) {
   try {
+    const user = await getAuthenticatedUser();
     await connectToDatabase();
     const data = await req.json();
 
@@ -63,6 +74,7 @@ export async function POST(req) {
       status: 'pending',
       expectedDeliveryDate: data.expectedDeliveryDate ? new Date(data.expectedDeliveryDate) : null,
       notes: data.notes,
+      userId: user.id,
     });
 
     // Populate the response
@@ -85,6 +97,7 @@ export async function POST(req) {
 
 export async function PUT(req) {
   try {
+    const user = await getAuthenticatedUser();
     await connectToDatabase();
     const data = await req.json();
     const { _id, status, ...updateData } = data;
@@ -123,6 +136,7 @@ export async function PUT(req) {
               : orderItem.quantity <= 5
                 ? 'low_stock'
                 : 'available',
+            userId: user.id,
           });
           
           // Update the order item to reference the new item
